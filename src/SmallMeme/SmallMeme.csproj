@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImageGenerator.cs" />
     <Compile Include="MemeValidator.cs" />
     <Compile Include="Meme.cs" />
     <Compile Include="Program.cs" />
