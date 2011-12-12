@@ -60,9 +60,7 @@
     <Content Include="memes\cooldog.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="memes\ducreaux.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="memes\ducreux.jpg" />
     <Content Include="memes\foreveralone.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
