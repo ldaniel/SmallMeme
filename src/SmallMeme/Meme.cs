@@ -1,7 +1,5 @@
 ﻿using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 
 public class Meme
 {
@@ -12,6 +10,8 @@ public class Meme
     public string TopText { get; private set; }
     public string BottomText { get; private set; }
     public string Status { get; private set; }
+    private int Height { get; set; }
+    private int Width { get; set; }
 
     public Meme()
     {
@@ -26,29 +26,36 @@ public class Meme
 
     public Bitmap GetMemeBaseImage()
     {
-        return new Bitmap(BasePath + BaseMeme + FileExtension);
-    }
+        var meme = new Bitmap(BasePath + BaseMeme + FileExtension);
+        Width = meme.Width;
+        Height = meme.Height;
 
-    public void Generate(string[] args)
-    {
-        CheckParameters(args);
-        CreateMemeImage();
-        UpdateStatus("small meme created -> " + BasePath + BaseMeme + FileExtension);
+        return meme;
     }
-
 
     public string GetStatus()
     {
         return Status;
     }
 
+    public void Generate(string[] args)
+    {
+        CheckParameters(args);
+        CreateMemeImage();        
+    }
+    
     private void CheckParameters(string[] args)
     {
-        if (MemeValidator.CheckParameters(args))
+        if (MemeValidator.IsValidParameters(args))
         {
             BaseMeme = args[0];
             TopText = args[1];
             BottomText = args[2];
+            UpdateStatus("small meme created -> " + BasePath + BaseMeme + FileExtension);
+        }
+        else
+        {
+            UpdateStatus(MemeValidator.GetHelpText());
         }
     }
 
@@ -60,26 +67,16 @@ public class Meme
         {
             using (var graphics = Graphics.FromImage(bitmap))
             {
-                graphics.DrawImage(memeBase, 0, 0, memeBase.Width, memeBase.Height);
-                DrawText(graphics);
+                ImageGenerator.DrawImage(graphics, memeBase);
+                ImageGenerator.DrawText(graphics, memeBase, TopText, 5);
+                ImageGenerator.DrawText(graphics, memeBase, BottomText, Height - 30);
             }
-            bitmap.Save(BasePath + OutputName + FileExtension, ImageFormat.Jpeg);
+            ImageGenerator.Save(bitmap, BasePath + OutputName + FileExtension);
         }
-    }
-
-    private void DrawText(Graphics graphics)
-    {
-        graphics.DrawString(TopText, GetFont(), Brushes.White, new Point(100, 10));
-        graphics.DrawString(BottomText, GetFont(), Brushes.White, new Point(100, 250));
-    }
+    }   
 
     private void UpdateStatus(string text)
     {
         Status = text;
-    }
-
-    private Font GetFont()
-    {
-        return new Font("Verdana", 18, FontStyle.Bold);
     }
 }
